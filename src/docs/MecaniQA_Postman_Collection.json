@@ -1,0 +1,497 @@
+{
+  "info": {
+    "_postman_id": "ed0c5144-ff21-4348-a43c-62a60b7d69d1",
+    "name": "MecâniQA API - Collection de Testes (US01 a US08)",
+    "description": "Collection oficial de testes REST para a aplicação MecâniQA.\nCobre todas as 8 User Stories solicitadas (US01 a US08) para validação dos endpoints de Peças e Serviços.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "peca_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "servico_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Gestão de Peças",
+      "item": [
+        {
+          "name": "US01 - Cadastrar Peça (POST)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigoBarras\": \"7891234567890\",\n  \"fornecedorMarca\": \"Bosch\",\n  \"quantidadeEstoque\": 15,\n  \"precoCusto\": 120.5,\n  \"precoVenda\": 189.9,\n  \"tamanho\": \"M\",\n  \"cor\": \"Preto\",\n  \"categoria\": \"MOTOR\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pecas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pecas"
+              ]
+            },
+            "description": "US01: Cadastra uma nova Peça. Salva automaticamente o ID gerado na variável 'peca_id'."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code é 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData && jsonData.id) {",
+                  "    pm.collectionVariables.set('peca_id', jsonData.id);",
+                  "    pm.test('ID da peça foi gerado', function() {",
+                  "        pm.expect(jsonData.id).to.be.a('string');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "US02 - Listar TODAS as Peças (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pecas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pecas"
+              ]
+            },
+            "description": "US02: Lista todas as peças cadastradas no catálogo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code é 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Retorno é uma lista', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(Array.isArray(jsonData)).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "US02 - Buscar Peça por ID (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pecas/{{peca_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pecas",
+                "{{peca_id}}"
+              ]
+            },
+            "description": "US02: Busca uma peça específica utilizando o ID salvo na variável de coleção 'peca_id'."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code é 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('ID retornado confere com o buscado', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.id).to.eql(pm.collectionVariables.get('peca_id'));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "US03 - Atualizar Peça (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigoBarras\": \"7891234567890\",\n  \"fornecedorMarca\": \"Bosch\",\n  \"quantidadeEstoque\": 25,\n  \"precoCusto\": 125.0,\n  \"precoVenda\": 199.9,\n  \"tamanho\": \"M\",\n  \"cor\": \"Preto\",\n  \"categoria\": \"MOTOR\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pecas/{{peca_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pecas",
+                "{{peca_id}}"
+              ]
+            },
+            "description": "US03: Atualiza preços de custo/venda e quantidade em estoque de uma Peça existente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code é 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Preço de venda atualizado com sucesso', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.precoVenda).to.eql(199.90);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "US04 - Excluir Peça (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pecas/{{peca_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pecas",
+                "{{peca_id}}"
+              ]
+            },
+            "description": "US04: Remove o registro de uma peça do catálogo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code é 204 No Content', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "US02/US04 - Validação Peça Inexistente / Deletada (GET 404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pecas/{{peca_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pecas",
+                "{{peca_id}}"
+              ]
+            },
+            "description": "Valida que buscar a peça recém deletada retorna status HTTP 404 Not Found."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code é 404 Not Found após exclusão', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Gestão de Serviços",
+      "item": [
+        {
+          "name": "US05 - Cadastrar Serviço (POST)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nomeServico\": \"Troca de \\u00d3leo e Filtro\",\n  \"tempoEstimadoMinutos\": 45,\n  \"custoTabelado\": 150.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/servicos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "servicos"
+              ]
+            },
+            "description": "US05: Cadastra um novo Serviço. Salva automaticamente o ID gerado na variável 'servico_id'."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code é 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData && jsonData.id) {",
+                  "    pm.collectionVariables.set('servico_id', jsonData.id);",
+                  "    pm.test('ID do serviço foi gerado', function() {",
+                  "        pm.expect(jsonData.id).to.be.a('string');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "US06 - Listar TODOS os Serviços (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/servicos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "servicos"
+              ]
+            },
+            "description": "US06: Consulta o catálogo completo de serviços disponíveis."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code é 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Retorno é uma lista', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(Array.isArray(jsonData)).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "US06 - Buscar Serviço por ID (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/servicos/{{servico_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "servicos",
+                "{{servico_id}}"
+              ]
+            },
+            "description": "US06: Busca um serviço específico utilizando o ID salvo na variável 'servico_id'."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code é 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('ID do serviço retornado confere', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.id).to.eql(pm.collectionVariables.get('servico_id'));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "US07 - Atualizar Serviço (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nomeServico\": \"Troca de \\u00d3leo e Filtro Sint\\u00e9tico Premium\",\n  \"tempoEstimadoMinutos\": 50,\n  \"custoTabelado\": 180.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/servicos/{{servico_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "servicos",
+                "{{servico_id}}"
+              ]
+            },
+            "description": "US07: Altera o tempo estimado e custo tabelado de um serviço."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code é 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Custo tabelado atualizado', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.custoTabelado).to.eql(180.00);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "US08 - Excluir Serviço (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/servicos/{{servico_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "servicos",
+                "{{servico_id}}"
+              ]
+            },
+            "description": "US08: Remove um serviço que não é mais prestado pela oficina."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code é 204 No Content', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "US06/US08 - Validação Serviço Inexistente / Deletado (GET 404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/servicos/{{servico_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "servicos",
+                "{{servico_id}}"
+              ]
+            },
+            "description": "Valida que buscar o serviço recém deletado retorna status HTTP 404 Not Found."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code é 404 Not Found após exclusão', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

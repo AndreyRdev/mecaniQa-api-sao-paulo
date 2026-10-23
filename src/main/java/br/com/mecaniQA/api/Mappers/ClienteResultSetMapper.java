@@ -1,0 +1,3 @@
+package br.com.mecaniQA.api.Mappers;
+import java.sql.*; import br.com.mecaniQA.api.model.*; import br.com.mecaniQA.api.Enums.*;
+public class ClienteResultSetMapper implements ResultSetMapper<Cliente>{public Cliente map(ResultSet r)throws SQLException{Cliente x=new Cliente();x.setIdCliente(r.getLong("id_cliente"));x.setNome(r.getString("nome"));x.setCpfCnpj(r.getString("cpf_cnpj"));x.setEmail(r.getString("email"));x.setTelefone(r.getString("telefone"));x.setEndereco(r.getString("endereco"));x.setCidade(r.getString("cidade"));x.setEstado(r.getString("estado"));x.setCep(r.getString("cep"));Timestamp t=r.getTimestamp("data_atualizacao");x.setDataAtualizacao(t==null?null:t.toLocalDateTime());return x;}}

@@ -1,0 +1,3 @@
+package br.com.mecaniQA.api.service;
+import br.com.mecaniQA.api.Repository.PecasRepository;import br.com.mecaniQA.api.model.Pecas;import java.util.*;import org.springframework.stereotype.Service;
+@Service public class PecasService {private final PecasRepository repo=PecasRepository.getInstance();public List<Pecas>listarTodas(){return repo.listarTodas();}public Pecas cadastrar(Pecas x){return repo.cadastrar(x);}public Pecas buscarPorCodigo(Long id){return repo.buscarPorCodigo(id);}public Pecas atualizar(Long id,Pecas x){return repo.atualizarPeca(id,x);}public Pecas deletar(Long id){return repo.deletarPeca(id);}public Pecas deletarPeca(Long id){return repo.deletarPeca(id);}}

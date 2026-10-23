@@ -1,0 +1,3 @@
+package br.com.mecaniQA.api.service;
+import br.com.mecaniQA.api.Repository.ServicosRepository;import br.com.mecaniQA.api.model.Servicos;import java.util.*;import org.springframework.stereotype.Service;
+@Service public class ServicosService {private final ServicosRepository repo=ServicosRepository.getInstance();public List<Servicos>listarTodos(){return repo.listarTodosServicos();}public Servicos cadastrar(Servicos x){return repo.cadastrarServico(x);}public Servicos atualizar(Long id,Servicos x){return repo.atualizarServico(id,x);}public Servicos deletar(Long id){return repo.deletarServico(id);}public Servicos deletarServico(Long id){return repo.deletarServico(id);}}
